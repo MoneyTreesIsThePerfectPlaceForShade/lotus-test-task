@@ -18,9 +18,18 @@
         <article class="table-container">
             <!-- Блок с таблицей -->
             <p class="table-header">ХОД</p>
-            <p class="timer-header">
-                <!-- {{ timerCount }} -->
-                {{ displayMinutes }}:{{ displaySeconds }}
+            <!-- Таймер -->
+            <p v-show="active120" class="timer-header timer-1">
+                {{ displayMinutes1 }}:{{ displaySeconds1 }}
+            </p>
+            <p v-show="active240" class="timer-header timer-2">
+                {{ displayMinutes2 }}:{{ displaySeconds2 }}
+            </p>
+            <p v-show="active360" class="timer-header timer-3">
+                {{ displayMinutes3 }}:{{ displaySeconds3 }}
+            </p>
+            <p v-show="active480" class="timer-header timer-4">
+                {{ displayMinutes4 }}:{{ displaySeconds4 }}
             </p>
 
             <p class="parametres">Параметры и требования</p>
@@ -37,9 +46,18 @@ export default {
     name: "TradeTable",
     data() {
         return {
-            timerCount: 120,
-            displaySeconds: "0" + 0,
-            displayMinutes: "0" + 2,
+            timerCount1: 120,
+            timerCount2: 240,
+            timerCount3: 360,
+            timerCount4: 480,
+            displaySeconds1: "0" + 0,
+            displayMinutes1: "0" + 2,
+            displaySeconds2: "0" + 0,
+            displayMinutes2: "0" + 2,
+            displaySeconds3: "0" + 0,
+            displayMinutes3: "0" + 2,
+            displaySeconds4: "0" + 0,
+            displayMinutes4: "0" + 2,
         };
     },
 
@@ -54,25 +72,130 @@ export default {
         _days() {
             return this._hours * 24;
         },
+        active120() {
+            if (this.timerCount1 <= 0) {
+                return false;
+            } else if (this.timerCount1 > 0) {
+                return true;
+            } else return true;
+        },
+        active240() {
+            if (this.timerCount2 >= 120 || this.timerCount2 <= 0) {
+                return false;
+            } else if (this.timerCount1 > 0) {
+                return true;
+            } else return true;
+        },
+        active360() {
+            if (this.timerCount3 >= 120 || this.timerCount3 <= 0) {
+                return false;
+            } else if (this.timerCount1 > 0) {
+                return true;
+            } else return true;
+        },
+        active480() {
+            if (this.timerCount4 >= 120 || this.timerCount4 <= 0) {
+                return false;
+            } else if (this.timerCount1 > 0) {
+                return true;
+            } else return true;
+        },
     },
     watch: {
-        timerCount: {
+        timerCount1: {
             handler(value) {
                 if (value > 0) {
                     setTimeout(() => {
-                        this.timerCount--;
+                        this.timerCount1--;
                         const seconds = Math.floor(
-                            (this.timerCount % this._minutes) / this._seconds
+                            (this.timerCount1 % this._minutes) / this._seconds
                         );
 
                         const minutes = Math.floor(
-                            (this.timerCount % this._hours) / this._minutes
+                            (this.timerCount1 % this._hours) / this._minutes
                         );
 
-                        this.displayMinutes =
+                        this.displayMinutes1 =
                             minutes < 10 ? "0" + minutes : minutes;
-                        this.displaySeconds =
+                        this.displaySeconds1 =
                             seconds < 10 ? "0" + seconds : seconds;
+                    }, 1000);
+                }
+            },
+            immediate: true,
+        },
+        timerCount2: {
+            handler(value) {
+                if (value > 0) {
+                    setTimeout(() => {
+                        this.timerCount2--;
+                        const seconds = Math.floor(
+                            (this.timerCount2 % this._minutes) / this._seconds
+                        );
+
+                        const minutes = Math.floor(
+                            (this.timerCount2 % this._hours) / this._minutes
+                        );
+
+                        this.displayMinutes2 =
+                            minutes < 10 ? "0" + minutes : minutes;
+                        this.displaySeconds2 =
+                            seconds < 10 ? "0" + seconds : seconds;
+                    }, 1000);
+                }
+            },
+            immediate: true,
+        },
+        timerCount3: {
+            handler(value) {
+                if (value > 0) {
+                    setTimeout(() => {
+                        this.timerCount3--;
+                        const seconds = Math.floor(
+                            (this.timerCount3 % this._minutes) / this._seconds
+                        );
+
+                        const minutes = Math.floor(
+                            (this.timerCount3 % this._hours) / this._minutes
+                        );
+
+                        this.displayMinutes3 =
+                            minutes < 10 ? "0" + minutes : minutes;
+                        this.displaySeconds3 =
+                            seconds < 10 ? "0" + seconds : seconds;
+                    }, 1000);
+                }
+            },
+            immediate: true,
+        },
+        timerCount4: {
+            handler(value) {
+                if (value > 0) {
+                    setTimeout(() => {
+                        this.timerCount4--;
+                        const seconds = Math.floor(
+                            (this.timerCount4 % this._minutes) / this._seconds
+                        );
+
+                        const minutes = Math.floor(
+                            (this.timerCount4 % this._hours) / this._minutes
+                        );
+
+                        this.displayMinutes4 =
+                            minutes < 10 ? "0" + minutes : minutes;
+                        this.displaySeconds4 =
+                            seconds < 10 ? "0" + seconds : seconds;
+                        if (
+                            this.timerCount1 <= 0 &&
+                            this.timerCount2 <= 0 &&
+                            this.timerCount3 <= 0 &&
+                            this.timerCount4 <= 0
+                        ) {
+                            this.timerCount1 = 120;
+                            this.timerCount2 = 240;
+                            this.timerCount3 = 360;
+                            this.timerCount4 = 480;
+                        }
                     }, 1000);
                 }
             },
@@ -115,14 +238,32 @@ $table-text-color: darken(lightblue, 30%);
 }
 
 .timer-header {
-    grid-column: 2/3;
-    grid-row: 1/2;
     color: $text-color;
     width: 15rem;
     margin-top: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.timer-1 {
+    grid-column: 2/3;
+    grid-row: 1/2;
+}
+
+.timer-2 {
+    grid-column: 3/4;
+    grid-row: 1/2;
+}
+
+.timer-3 {
+    grid-column: 4/5;
+    grid-row: 1/2;
+}
+
+.timer-4 {
+    grid-column: 5/6;
+    grid-row: 1/2;
 }
 
 .parametres {
